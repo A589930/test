@@ -1831,3 +1831,773 @@ find permutation of string without using itertools
 
 >>> list(product('abc'))
 ['aaa', 'aab', 'aac', 'aba', 'abb', 'abc', 'aca', 'acb', 'acc', 'baa', 'bab', 'bac', 'bba', 'bbb', 'bbc', 'bca', 'bcb', 'bcc', 'caa', 'cab', 'cac', 'cba', 'cbb', 'cbc', 'cca', 'ccb', 'ccc']
+=================
+wap to find length of longest substring without repeating characters
+
+def test(s):
+    maxlen=-1
+    maxstr=""
+    if len(s) == 0:
+        return -1
+    else:
+        for i in range(len(s)):
+            tmp = s[i]
+            for j in range(i+1, len(s)):
+                if s[j] not in tmp:
+                    tmp += s[j]
+                    if len(tmp) > maxlen:
+                        maxlen= len(tmp)
+                        maxstr= tmp
+                else:
+                    break
+    if len(tmp) > maxlen:
+        maxlen=len(tmp)
+        maxstr=tmp
+    print("max len is {} maxstr is {}".format(maxlen,maxstr))
+
+#test('enjoyalgorithms')
+#test('abcabcbb')
+test('bbbb')
+test('pwwkew')
+
+====================
+
+wap to count distinct elements present in every k sized window of array 
+for ex : arrary [1,1,1,3,4,2,3] and k = 4
+op : [2, 3, 4, 3]
+explanation : in first 4 elements i. e. 1,1,1,3 there are 2 distinct elements hence first element in op list is 2
+
+def test(l,k):
+    op=list()
+    for i in range(len(l)-k+1):
+        op.append(len(set(l[i:i+4])))
+    print(op)
+
+test([1,2,4,4,2],3)
+
+================
+find permutation of string without using itertools
+
+>>> def test(x):
+	final = [[]]
+	l=len(x)
+	groups=[list(x)] *l
+	op = []
+	for i in groups:
+		final = [x+[y] for x in final for y in i]
+	for k in final:
+		op.append("".join(k))
+	return op
+
+>>> list(product('abc'))
+['aaa', 'aab', 'aac', 'aba', 'abb', 'abc', 'aca', 'acb', 'acc', 'baa', 'bab', 'bac', 'bba', 'bbb', 'bbc', 'bca', 'bcb', 'bcc', 'caa', 'cab', 'cac', 'cba', 'cbb', 'cbc', 'cca', 'ccb', 'ccc']
+===========
+>>> test()
+1
+========================
+==============================
+
+Given a matrix of n X n. The task is to calculate the absolute difference between the sums of its diagonal.
+
+Input : mat[][] = 11 2 4
+                   4 5 6
+                  10 8 -12 
+Output : 15
+Sum of primary diagonal = 11 + 5 + (-12) = 4.
+Sum of secondary diagonal = 4 + 5 + 10 = 19.
+Difference = |19 - 4| = 15.
+
+
+Input : mat[][] = 10 2
+                   4 5
+Output : 9
+
+
+CODE : 
+def test(m,n):
+    d1=0
+    d2=0
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                d1+=m[i][j]
+            if i == n - j -1 :
+                d2+=m[i][j]
+    print("diff is ",abs(d1-d2))
+
+
+
+matrix = [[11,2,4], [4,5,6], [10,8,-12]]
+test(matrix, 3)
+
+================
+Move 0's to end of the list without creating a new list or any inbuilt function
+a= [1, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5, 6, 0, 0, 0, 0, 0,9, 8, 7,0,10,11]
+
+
+def test(a):
+    ind=0
+    for i in range(len(a)):
+        if a[i] !=0:
+            a[ind] , a[i] = a[i], a[ind]
+            ind +=1
+    print(a)
+
+a= [1, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5, 6, 0, 0, 0, 0, 0,9, 8, 7,0,10,11]
+test(a)
+=========
+how to sort the dictionary with its values 
+
+footballers_goals = {'Eusebio': 120, 'Cruyff': 104, 'Pele': 150, 'Ronaldo': 132, 'Messi': 125}
+
+temp = dict(sorted(footballers_goals.items() , key=lambda x : x[1])) # sorted by value
+
+print(temp)
+#{'Cruyff': 104, 'Eusebio': 120, 'Messi': 125, 'Ronaldo': 132, 'Pele': 150}
+
+
+temp = dict(sorted(footballers_goals.items() , key=lambda x : x[0])) # sorted by key
+
+print(temp)
+#{'Cruyff': 104, 'Eusebio': 120, 'Messi': 125, 'Pele': 150, 'Ronaldo': 132}
+
+===================
+convert roman to integer no 
+
+def convert(s):
+    romans = {
+        'I':1,
+        "V":5,
+        'X':10,
+        "L":50,
+        "C":100,
+        'D':500,
+        'M':1000,
+        'IV':4,
+        'IX':9,
+        'XL':40,
+        'XC':90,
+        'CD':400,
+        'CM':900
+    }
+    op=0
+    i=0
+    while i<len(s):
+        if i+1 < len(s) and s[i]+s[i+1] in romans:
+            op+= romans[s[i]+s[i+1]]
+            i+=2
+        else:
+            op+=romans[s[i]]
+            i+=1
+    print(op)
+
+convert('XLIV')
+
+==============
+Given an integar array nums return all triplets such that nums[i] + nums[j] + nums[k] = 0 and i!=j and j!=k and i!=k 
+solution triplets should not contain duplicate items
+
+def test(nums):
+    s=set()
+    h=dict()
+    n=len(nums)
+    for i,num in enumerate(nums):
+        h[num] = i
+    for i in range(n):
+        for j in range(i+1,n):
+            desired = -nums[i] - nums[j]
+            if desired in h and h[desired] != i and h[desired] != j:
+                s.add(tuple(sorted([desired, nums[i],nums[j]])))
+    print(s)
+
+test([-1,0,-1,2,1,-4])
+
+OP : 
+{(-1, 0, 1), (-1, -1, 2)}
+
+==========
+Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+ 
+
+Example 1:
+
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+
+from collections import defaultdict
+def test(strs):
+    anagram_dict = defaultdict(list)
+    for s in strs:
+        count=[0]*26
+        for c in s:
+            count[ord(c)-ord('a')] += 1
+        key = tuple(count)
+        anagram_dict[key].append(s)
+        print(anagram_dict)
+    return anagram_dict.values()
+
+print(test(['eat','ate','tea']))
+
+================
+
+Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+Each row must contain the digits 1-9 without repetition.
+Each column must contain the digits 1-9 without repetition.
+Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+
+Input: board = 
+[["5","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]
+Output: true
+
+
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        for i in range(9):
+            s=set()
+            for j in range(9):
+                if board[i][j] in s:
+                    return False
+                elif board[i][j] != '.':
+                    s.add(board[i][j])
+
+        for i in range(9):
+            s=set()
+            for j in range(9):
+                if board[j][i] in s:
+                    return False
+                elif board[j][i] != '.':
+                    s.add(board[j][i])
+
+        start=[(0,0),(0,3),(0,6),
+                (3,0),(3,3),(3,6),
+                (6,0),(6,3),(6,6)]
+        for i,j in start:
+            s=set()
+            for row in range(i,i+3):
+                for col in range(j,j+3):
+                    if board[row][col] in s:
+                        return False
+                    elif board[row][col] != '.':
+                        s.add(board[row][col])
+        return True
+
+
+=================
+Longest consecutive sequence 
+Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
+
+You must write an algorithm that runs in O(n) time.
+
+ 
+
+Example 1:
+
+Input: nums = [100,4,200,1,3,2]
+Output: 4
+Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        s=set(nums)
+        longest=0
+        for num in nums:
+            if num-1 not in nums :
+                next_num = num +1
+                length = 1
+                while next_num in s:
+                    length +=1
+                    next_num +=1
+                longest = max(longest, length)
+        return longest
+        
+		
+===================
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+ 
+
+Example 1:
+
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        l=0
+        r=len(s)-1
+        while l<r:
+            if not s[l].isalnum():
+                l+=1
+                continue
+            if not s[r].isalnum():
+                r-=1
+                continue
+            if s[l].lower() != s[r].lower():
+                return False
+            
+            l+=1
+            r-=1
+        return True
+         
+=====================
+two sum input array is sorted 
+
+
+Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number. Let these two numbers be numbers[index1] and numbers[index2] where 1 <= index1 < index2 <= numbers.length.
+
+Return the indices of the two numbers, index1 and index2, added by one as an integer array [index1, index2] of length 2.
+
+The tests are generated such that there is exactly one solution. You may not use the same element twice.
+
+Your solution must use only constant extra space.
+
+ 
+
+Example 1:
+
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+Explanation: The sum of 2 and 7 is 9. Therefore, index1 = 1, index2 = 2. We return [1, 2].
+
+
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        l=0
+        r=len(numbers)-1
+        while l < r:
+            if numbers[l]+numbers[r] > target:
+                r-=1
+            elif numbers[l]+numbers[r] < target:
+                l+=1
+            else:
+                return [l+1,r+1]
+        
+		==========================
+Container with most water
+
+https://leetcode.com/problems/container-with-most-water/description/
+
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+Notice that you may not slant the container.
+
+ 
+
+Example 1:
+
+
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+
+		
+
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        l=0
+        r=len(height)-1
+        max_area = 0
+        while l < r:
+            w=r-l
+            h=min(height[r],height[l])
+            area = w*h
+            max_area = max(max_area, area)
+            if height[l] < height[r]:
+                l+=1
+            else:
+                r-=1
+        return max_area
+        
+		
+==================
+3 sum 
+
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+
+Notice that the solution set must not contain duplicate triplets.
+
+ 
+
+Example 1:
+
+Input: nums = [-1,0,1,2,-1,-4]
+Output: [[-1,-1,2],[-1,0,1]]
+Explanation: 
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
+The distinct triplets are [-1,0,1] and [-1,-1,2].
+Notice that the order of the output and the order of the triplets does not matter.
+
+
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        h=dict()
+        n=len(nums)
+        s=set()
+        for i,val in enumerate(nums):
+            h[val]=i
+        for i in range(n):
+            for j in range(i+1, n):
+                desired = - nums[i] - nums[j]
+                if desired in h and h[desired] != i and h[desired] != j:
+                    s.add(tuple(sorted([nums[i],nums[j],desired])))
+        return s
+        
+=========================
+Trapping rain water	
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped.
+
+https://www.youtube.com/watch?v=KFdHpOlz8hs&list=PLKYEe2WisBTFEr6laH5bR2J19j7sl5O8R&index=13
+
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n=len(height)
+        l_wall = r_wall = 0
+        max_left = [0]*n
+        max_right = [0]*n
+
+        for i in range(n):
+            j=-i-1
+            max_left[i] = l_wall
+            max_right[j]= r_wall
+            l_wall = max(height[i], l_wall)
+            r_wall = max(height[j], r_wall)
+        
+        summ = 0
+        for i in range(n):
+            pot = min(max_left[i], max_right[i])
+            summ += max(0, pot - height[i])
+        return summ
+===================
+Daily temperatures 
+https://www.youtube.com/watch?v=_ZEvmycwXHs&list=PLKYEe2WisBTFEr6laH5bR2J19j7sl5O8R&index=15
+
+Given an array of integers temperatures represents the daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature. If there is no future day for which this is possible, keep answer[i] == 0 instead.
+
+ 
+
+Example 1:
+
+Input: temperatures = [73,74,75,71,69,72,76,73]
+Output: [1,1,4,2,1,1,0,0]
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        n=len(temperatures)
+        ans=[0]*n
+        stk=list()
+        for i,t in enumerate(temperatures):
+            while stk and stk[-1][0] < t:
+                stk_t , stk_i = stk.pop()
+                ans[stk_i] = i-stk_i
+            stk.append((t,i))
+        return ans         
+		
+====================
+Reverse polish notation 
+
+https://www.youtube.com/watch?v=ffgmKxRqiMc&list=PLKYEe2WisBTFEr6laH5bR2J19j7sl5O8R&index=17
+
+
+You are given an array of strings tokens that represents an arithmetic expression in a Reverse Polish Notation.
+
+Evaluate the expression. Return an integer that represents the value of the expression.
+
+Note that:
+
+The valid operators are '+', '-', '*', and '/'.
+Each operand may be an integer or another expression.
+The division between two integers always truncates toward zero.
+There will not be any division by zero.
+The input represents a valid arithmetic expression in a reverse polish notation.
+The answer and all the intermediate calculations can be represented in a 32-bit integer.
+ 
+
+Example 1:
+
+Input: tokens = ["2","1","+","3","*"]
+Output: 9
+Explanation: ((2 + 1) * 3) = 9
+
+from math import ceil, floor
+class Solution:
+    def evalRPN(self, tokens: List[str]) -> int:
+        stk=list()
+        for  t in tokens:
+            if t in '+-*/':
+                b,a=stk.pop(), stk.pop()
+
+                if t == '+':
+                    stk.append(a+b)
+                elif t == '-':
+                    stk.append(a-b)
+                elif t == '*':
+                    stk.append(a*b)
+                else:
+                    division = a/b
+                    if division <0:
+                        stk.append(ceil(division))
+                    else:
+                        stk.append(floor(division))
+            else:
+                stk.append(int(t))
+        return stk.pop(0)
+
+        
+======================
+https://leetcode.com/problems/search-a-2d-matrix/description/
+https://www.youtube.com/watch?v=x-dYOtIudzc&list=PLKYEe2WisBTFEr6laH5bR2J19j7sl5O8R&index=19
+
+You are given an m x n integer matrix matrix with the following two properties:
+
+Each row is sorted in non-decreasing order.
+The first integer of each row is greater than the last integer of the previous row.
+Given an integer target, return true if target is in matrix or false otherwise.
+
+You must write a solution in O(log(m * n)) time complexity.
+
+Example 1:
+
+Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3
+Output: true
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        m=len(matrix)
+        n=len(matrix[0])
+        t=m*n
+        l=0
+        r=t-1
+        while l <= r:
+            m=(l+r)//2
+            i=m//n
+            j=m%n
+            if target == matrix[i][j]:
+                return True
+            elif target < matrix[i][j]:
+                r=m-1
+            else:
+                l=m+1
+        return False
+		
+===================
+Reverse a signed number without using str() function 
+
+def test(n):
+    temp = 0
+    if n >0:
+        while n>0:
+            t=n%10
+            temp = temp*10 + t
+            print(temp)
+            n=int(n/10)
+        print('temp is ',temp)
+    else:
+        while n<0:
+            t=(-1*n)%10
+            temp = temp*10 + t
+            print(temp)
+            n=int(n/10)
+        print('temp is ',temp*-1)
+test(-789)
+
+IP : 123
+OP : 321
+IP : -789
+OP : -987
+
+============
+Tree Implementaion 
+
+class binaryTreeNode():
+    def __init__(self,data):
+        self.data = data
+        self.left=None
+        self.right=None
+
+def printTree(root):
+    if root == None:
+        return None
+    print(root.data , end=": ")
+    if root.left != None:
+        print("L",root.left.data, end=" ")
+    if root.right != None:
+        print("R",root.right.data, end=" ")
+    print()
+    printTree(root.left)
+    printTree(root.right)
+
+#printTree(btn1)
+def treeInput():
+    rootData=int(input())
+    if rootData == -1:
+        return None
+    root = binaryTreeNode(rootData)
+    leftTree =  treeInput()
+    rightTree = treeInput()
+    root.left = leftTree
+    root.right= rightTree
+    return root
+
+def count_nodes(root):
+    if root == None:
+        return 0
+    leftCount=  count_nodes(root.left)
+    rightCount = count_nodes(root.right)
+    return leftCount + rightCount + 1
+
+
+def preOrder(root):
+    if root:
+        print(root.data)
+        preOrder(root.left)
+        preOrder(root.right)
+
+def postOrder(root):
+    if root:
+        postOrder(root.left)
+        postOrder(root.right)
+        print(root.data)
+
+
+def inOrder(root):
+    if root:
+        inOrder(root.left)
+        print(root.data)
+        inOrder(root.right)
+
+def countmax(root):
+    if root == None:
+        return -1
+    maxleft = countmax(root.left)
+    maxright = countmax(root.right)
+    maximum = max(root.data, maxleft, maxright)
+    return maximum
+
+def height(root):
+    if root == None:
+        return 0
+    leftheight = height(root.left)
+    rightheight = height(root.right)
+    return max(leftheight , rightheight) + 1
+
+
+def leafNodes(root):
+    if root == None:
+        return 0
+    if root.left == None and root.right == None:
+        return 1
+    leftleaf = leafNodes(root.left)
+    rightleaf = leafNodes(root.right)
+    return leftleaf + rightleaf
+
+
+def isbalanced(root):
+    if root is None:
+        return True
+    leftheight = height(root.left)
+    rightheight= height(root.right)
+
+    if leftheight - rightheight > 1 or rightheight - leftheight > 1:
+        return False
+
+    isLeftbalanced = isbalanced(root.left)
+    isRightbalanced = isbalanced(root.right)
+
+    if isLeftbalanced and isRightbalanced:
+        return True
+    else:
+        return False
+
+
+root  = treeInput()
+print("Tree is balanced or not : ",isbalanced(root))
+
+#print("leaf nodes are")
+#print(leafNodes(root))
+#print("max data is ")
+#print(countmax(root))
+#print("height of tree is ")
+#print(height(root))
+# print("total no of nodes",count_nodes(root))
+# printTree(root)
+# print("Preoder traversal is ")
+# preOrder(root)
+# print("inOrder traversal is ")
+# inOrder(root)
+# print("postOrder traversal is")
+# postOrder(root)
+
+==============
+find minimum no of platforms required for the railway station below provided are arrival and departure timing of trains
+    
+
+def test(arr, dep):
+    count=max=1
+    arr.sort()
+    dep.sort()
+    i=1
+    j=0
+    n=len(arr)
+    while i <n and j <n:
+        if arr[i] <= dep[j]:
+            i+=1
+            count+=1
+            if count > max:
+                max=count
+        else:
+            j+=1
+            count-=1
+    return max
+
+arr=[900,940,950,1100,1500,1800]
+dep=[910,1200,1120,1130,1900,2000]
+print(test(arr,dep))
+
+===========================
+===========
+Given an array of elements , having some non zero and some zero elements.wirte a program to move all the zeros to end of the array by maintaining 
+sequence of nonzero intact
+
+def test(n):
+    l=len(n)
+    x=[0]*l
+    j=0
+    for i,p in enumerate(n):
+        if p != 0:
+            x[j] = p
+            j+=1
+    print(x)
+
+test([0.1,1,1.1,0,2,0,3,4,0,0,5])
+
+OP:
+[0.1, 1, 1.1, 2, 3, 4, 5, 0, 0, 0, 0]
+===========
