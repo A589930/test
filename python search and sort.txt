@@ -2436,7 +2436,17 @@ print(add_part(3))
 
 
 OP : 312
+===================
+can we add new data in tuple: 
+NO. as tuple is immutable we cant add data in tuple
+
+in list how to add data at zeroth location :
+[2,3,4,5]
+l.insert(0,1)
+[1,2,3,4,5]
+
 ========================
+
 Implement singly linked list with traverse and  remove_nth_node_from_left function :
 
 class node:
@@ -2750,75 +2760,6 @@ print(temp)
 #{'Cruyff': 104, 'Eusebio': 120, 'Messi': 125, 'Pele': 150, 'Ronaldo': 132}
 
 ======================
-Move 0's to end of the list without creating a new list or any inbuilt function
-a= [1, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5, 6, 0, 0, 0, 0, 0,9, 8, 7,0,10,11]
-
-
-def test(a):
-    ind=0
-    for i in range(len(a)):
-        if a[i] !=0:
-            a[ind] , a[i] = a[i], a[ind]
-            ind +=1
-    print(a)
-
-a= [1, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5, 6, 0, 0, 0, 0, 0,9, 8, 7,0,10,11]
-test(a)
-========
-Given an array of elements , having some non zero and some zero elements.wirte a program to move all the zeros to end of the array by maintaining 
-sequence of nonzero intact
-
-def test(n):
-    l=len(n)
-    x=[0]*l
-    j=0
-    for i,p in enumerate(n):
-        if p != 0:
-            x[j] = p
-            j+=1
-    print(x)
-
-test([0.1,1,1.1,0,2,0,3,4,0,0,5])
-
-OP:
-[0.1, 1, 1.1, 2, 3, 4, 5, 0, 0, 0, 0]
-
-=====================
-Given a matrix of n X n. The task is to calculate the absolute difference between the sums of its diagonal.
-
-Input : mat[][] = 11 2 4
-                   4 5 6
-                  10 8 -12 
-Output : 15
-Sum of primary diagonal = 11 + 5 + (-12) = 4.
-Sum of secondary diagonal = 4 + 5 + 10 = 19.
-Difference = |19 - 4| = 15.
-
-
-Input : mat[][] = 10 2
-                   4 5
-Output : 9
-
-
-CODE : 
-def test(m,n):
-    d1=0
-    d2=0
-    for i in range(n):
-        for j in range(n):
-            if i == j:
-                d1+=m[i][j]
-            if i == n - j -1 :
-                d2+=m[i][j]
-    print("diff is ",abs(d1-d2))
-
-
-
-matrix = [[11,2,4], [4,5,6], [10,8,-12]]
-test(matrix, 3)
-
-================
-
 concurrent programming :
 https://www.youtube.com/watch?v=y85G7GLYhYA&list=PLyb_C2HpOQSBsygWeCYkJ7wjxXShIql43&index=1
 
@@ -2867,7 +2808,6 @@ https://www.youtube.com/watch?v=Ju4xkvFm07o&list=PLyb_C2HpOQSDUh4kIJnprJjh5n5Wqs
 multithreading 
 https://www.youtube.com/watch?v=ZPM8TCz5cd8&list=PLyb_C2HpOQSC-Ncui9S4ncUdaGI2YEhwK&index=1
 
-===========
 ===================
 can we add new data in tuple: 
 NO. as tuple is immutable we cant add data in tuple
@@ -2946,3 +2886,26 @@ except KeyboardInterrupt:
 re.match() checks for a match only at the beginning of the string
 re.search() checks for a match anywhere in the string
 
+==========
+===========
+what is difference between find and index function in string 
+
+s='vijay'
+
+s.find('a')
+3
+s.find('z')
+-1
+-------------
+s.index('a')
+3
+s.index('z')
+ValueError: substring not found		
+
+for find function it will return -1 if character is not found , index function will return valueerror if charachter is not found
+==================
+difference between shallow copy and deep copy 
+
+https://www.geeksforgeeks.org/copy-python-deep-copy-shallow-copy/
+
+===============
