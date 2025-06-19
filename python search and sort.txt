@@ -2909,3 +2909,302 @@ difference between shallow copy and deep copy
 https://www.geeksforgeeks.org/copy-python-deep-copy-shallow-copy/
 
 ===============
+
+def extendList(val, list=[]):
+    list.append(val)
+    return list
+
+list1 = extendList(10)
+list2 = extendList(123,[])
+list3 = extendList('a')
+
+print("list1 = " , list1)
+print("list2 = " , list2) 
+print("list3 = " , list3)
+
+
+OP : 
+list1 =  [10, 'a']
+list2 =  [123]
+list3 =  [10, 'a']
+
+==================
+l=[2,4,3,6,5,1,8,9,11,10,11]
+fmax=-1
+smax=-1
+
+for item in l:
+    if item > fmax:
+        smax=fmax
+        fmax=item
+    elif item > smax and item != fmax:
+       smax=item
+
+print("fmax",fmax)
+print("smax ",smax)
+
+====================
+class Parent(object):
+    x = 1
+
+class Child1(Parent):
+    pass
+
+class Child2(Parent):
+    pass
+
+print(Parent.x, Child1.x, Child2.x)
+Child1.x = 2
+print(Parent.x, Child1.x, Child2.x)
+Parent.x = 3
+print(Parent.x, Child1.x, Child2.x)  
+
+OP :
+1 1 1
+1 2 1
+3 2 3
+
+===================
+
+try:
+    p=1/0
+except:
+    print("inside except")
+finally:
+    print("finally")
+
+print('after finally')
+
+what is OP :
+
+inside except
+finally
+after finally
+
+==============
+
+what is session in django ?
+https://www.geeksforgeeks.org/python-sessions-framework-using-django/
+
+==============
+application of linked list as polynomial representation 
+https://www.youtube.com/watch?v=U4wjyf9L5zU
+
+================
+Django select_related 
+https://www.youtube.com/watch?v=mO-pfdJpnBA
+Returns a QuerySet that will “follow” foreign-key relationships, selecting additional related-object data when it executes its query. This is a performance booster which results in a single more complex query but means later use of foreign-key relationships won’t require database queries.
+select_related is limited to single-valued relationships - foreign key and one-to-one.
+
+# Hits the database.
+e = Entry.objects.get(id=5)
+
+# Hits the database again to get the related Blog object.
+b = e.blog
+
+
+# Hits the database.
+e = Entry.objects.select_related("blog").get(id=5)
+
+# Doesn't hit the database, because e.blog has been prepopulated
+# in the previous query.
+b = e.blog
+
+
+
+=============================
+Django prefetch related
+This has a similar purpose to select_related, in that both are designed to stop the huge of database queries
+
+
+https://www.youtube.com/watch?v=5-UN4YPDDQc
+
+
+prefetch_related, does a separate lookup for each relationship, and does the ‘joining’ in Python. This allows it to prefetch many-to-many, many-to-one, in addition to the foreign key and one-to-one relationships that are supported by select_related. 
+
+=================
+what is difference between filter and get method 
+
+we use get method when we u want to get single unique object 
+we use filter  when u want to get all objects that match your lookup parameters
+
+get() throws an error if there is no object matching the query 
+filter will return an empty query set
+
+get raises MultipleObjectsReturned exception if more than one object is found 
+get raises DoesNotExist exception if object was not found for given parameters 
+
+=================
+which companies uses Django
+Instagram
+youtube
+bitbucket
+pinterest
+dropbox 
+
+================
+how to configure static files in django 
+
+1) ensure that django.contrib.staticfiles is added to installed_apps
+2) in your settings.py file add line 
+STATIC_URL = 'static/'
+3) in template add below code
+{% load static %}
+<img src="{% static 'my_app/example.jpg' %}" alt="my image">
+4) store your static file in below path 
+my_app/static/my_app/example.jpg
+
+
+================
+explain django admin and django admin interface
+
+django admin panel is GUI  is used for administrative purposes 
+you get admin panel to manage your data and access it 
+development process becomes faster and it becomes easier for administrator to perform administrative activities 
+
+=================
+what are queue objects in django ORM
+It is an object to encapsulate collection of keyword arguments 
+it is used to write complex queries , containing AND , OR 
+
+from django.db.models import Q
+from django.db import models 
+
+
+models.objects.get(Q(question__startwith='when'),Q(question__startwith='On') | Q(question__startwith='At'))
+=================
+what is significance of manage.py file 
+
+automatically generated when you create your project
+command line utility that help you to interact with your project 
+when django server is started then manage.py  file searches for settings.py file which contains info about all applications installed in projects , all middlewares , db connections 
+================
+
+what is use of include function in  urls.py file
+
+in django there can be multiple apps , each app may have urls that it responds to
+rather than registering all urls for all apps in single urls.py file , each app maintains its own url.py file and in projects urls.py file we use each individual urls.py file of each app by using include function 
+
+=========================
+what is middleware in django ?
+
+middleware is something that operated in between request and response
+it is a component that operates on request and transfers it to a view , again  it operates on response before sending it to template engine
+================
+what is session in django
+
+a mechanism to store information on server 	side during interaction on web server 
+==============
+what are django signals
+
+django consists of signal dispatcher that helps allow decoupled applications to get notified when action occurs elsewhere in framework 
+django consists of set of built in signals that allow sender to notify set of receivers when some action is executed 
+they are useful when many pieces of code are interested in same event 
+
+2 imp parameters in signal 
+sender 
+receiver 
+================
+what is context in django 
+
+a dictionary in which key represents variable name and value represents its value .
+context is passed to template which then uses the variable to output dynamic content 
+
+====================
+what are django exceptions
+
+an abnormal event to leads to program failure.
+django uses its exception class and python exception classes to deal with such situation
+1) django exception classes : 
+AppRegistryNotReady
+ObjectDoesNotExist
+EmptyResultSet
+FieldDoesNotExist
+MultipleObjectsReturned
+PermissionDenied
+
+================
+
+what happends when users.ojects.get() function is called with parameters that do not match with existing object in database
+
+basically we use get() when you want to get single unique object and get throws and error if there is no object matching the query 
+if there are no object mathcing the query then it raises DoesNotExist exception 
+if more than one object matched then it throws MultipleObjectsReturned exception 
+
+===============
+how to make a variable available to all templates in django 
+
+for this we need to create a context processor 
+Add custom_app to INSTALLED_APPS in settings.py (you've done it already, right?);
+●        Create a context_processors.py into custom_app folder;
+●        Add the following code to that new ﬁle:
+def categories_processor(request): 
+categories = Category.objects.all() 
+return {'categories': categories}
+●        Add context_processors.py to
+
+TEMPLATE_CONTEXT_PROCESSORS in settings.py 
+TEMPLATE_CONTEXT_PROCESSORS += ("custom_app.context_processors.categories_processor" , )
+
+================================
+
+what is difference between django one-to-one field and ForeignKey Field 
+
+ForeignKeyField : many-to-one relationship. one instance from one model is related to many instance from other model.
+example a blog post related to user. one user can have many blog post 
+
+one-to-one field : one to one relationship. one instance from one model is connected to one instance from other model.
+user profile information conneted to user model. each user has one profile.
+
+===================
+how can you use file based session in django 
+
+add below line in settings.py
+
+SESSION_ENGINE="djnago.contrib.sessions.backends.file"
+
+===================
+what is serialization in django 
+a process of converting django models into xml or json 
+
+===================
+explain caching strategies in django 
+caching refers to technique of storing output results when they are processed initially so that next time when the same results are fetched again instead of processing again the same results can be used. which lead to faster accessing as well as less resource utlilization.
+
+django provides robust cache system that is able to store dynamic web pages so that these pages dont need to be evaluated again for each request.
+
+
+MemCached Caching : this is gold standard for caching. in memory service taht returns keys very fast rate. not a good choice if your keys are of large size.
+Redis : good alternative to memcached cache when you want to cache large size keys 
+https://www.youtube.com/watch?v=UpxQb9Hrg3c
+
+DynamoDb Caching : good alternative to memcache when you want to cache very large keys. also it scales very well with little IT overhead.
+
+=======
+how to delete a objects , fetched from database
+
+Users.objects.get(id=1).delete()
+
+how to update a object , after fetching from database
+
+user=Users.objects.get(id=1)
+user.city='mumbai'
+user.age=23
+user.save()
+
+how to add new object in database
+
+user = User(name='vijay',age=23)
+user.save()
+
+=============
+
+diff betweeen session based auth and jwt 
+https://www.youtube.com/watch?v=p_sDlCyzUFU
+
+https://www.youtube.com/watch?v=fyTxwIa-1U0
+
+=============
+Django JWT 
+
+https://www.youtube.com/watch?v=w0nYSAN6Xjg
