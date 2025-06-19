@@ -70,3 +70,1181 @@ SAVEPOINT–sets a savepoint within a transaction.
 SAVEPOINT savepoint_name;
 
 SET TRANSACTION–specify characteristics for the transaction.
+
+==========================================================================
+alter database name :
+
+way 1) alter database sample1 modify name=sample3
+way 2) execute sp_renameDB 'sample3', 'sample4'
+
+find all details for person where email id is not valid 
+
+select * from tblPerson where email not like '%@%'
+
+find all persons name starting with v and s 
+
+select * from tblPerson where name  like '[vs]%'
+
+
+find all person whose name doesnt start with v and s
+
+select * from tblPerson where name  like '[^vs]%'
+
+
+print all data in table by descending order or name and ascending order of age 
+select * from tblPerson order by name desc, age asc;
+
+
+print empname and his manager name from employee table using self join 
+
+1) select e.name as employee_name , 
+case when m.name is NULL then 'No Manager' else m.name end as Manager_name
+from tblemployee e 
+left join tblemployee m 
+on e.managerid = m.employeeid
+
+2) select e.name as employee_name , coalesce(m.name, 'NO MANAGER') as Manager_name
+from tblemployee e 
+left join tblemployee m 
+on e.managerid = m.employeeid
+
+3) select e.name as employee_name , isnull(m.name, 'NO MANAGER') as Manager_name
+from tblemployee e 
+left join tblemployee m 
+on e.managerid = m.employeeid
+
+Stored procedure :
+
+sp_helptext : disply content of sp 
+sp_help : display input and output parametres of sp
+sp_depends : display what all tables this sp is dependant on and what all columns 
+
+Sample SP :
+create proc spGetEmployeebGender
+@Gender nvarchar(20),
+@EmployeeCount int Output
+as begin
+select @EmployeeCount = count(id) from tblemployee where gender = @gender
+
+end
+
+declare @EmployeeCount int
+execute spGetEmployeebGender 'male' , @EmployeeCount 
+print @EmployeeCount
+
+Return value example : 
+create proc spGetTotalEmployee2
+as
+begin
+	return (select count(id) from tblemployee)
+end
+
+declare @op int
+exec @op=  spGetTotalEmployee2
+print @op
+
+
+create proc spGetNameById
+@id int,
+@name nvarchar(20) output
+as
+begin
+	select @name= name from tblEmployee where id=@id
+end
+
+declare @name nvarchar(20)
+exec spGetNameById 1 , @name output
+print @name
+
+==================
+convert char to ascii and vice versa 
+
+
+select ASCII('A')  # 65
+
+select char(65) # 'A'
+
+declare @start int
+set @start = 65
+while (@start <= 90)
+begin
+	print char(@start)
+	set @start = @start + 1
+end
+// print A B C ..... Z
+
+LTRIM() : used to remove left balank spaces 
+RTRIM() : used to remove right blank spaces
+UPPER() : for converting to upper case 
+LOWER() : used to convert lower case 
+reverse() : used to reverse a string 
+len() : used to find length of string 
+
+select  left('vijay',3) // vij
+select  right('vijay',3)  // jay
+select charindex('@','vijay@gmail.com') //6
+select substring('vijay@gmail.com', 7,9) //gmail.com
+
+
+
+
+print all emails containing @gmail.com and their firstoccurance index 
+select email , patindex('%@gmail.com',email) as FirstOccurance 
+from tblemployee
+where patindex('%@gmail.com',email) > 0;
+
+vijay1@gmail.com	7
+vijay2@gmail.com	8
+vijay@gmail.com	6
+
+
+Replace .com with .net in email fields 
+select name , replace(email, '.com','.net') as Converted 
+from tblEmployee
+
+================
+Date functions 
+
+select day(getdate())
+select day('01/12/2024')
+
+select month(getdate())
+select month('01/12/2024')
+
+select year(getdate())
+select (year('01/12/2024'))
+
+from dateofbirth print below details individually 
+
+select * from  tblemployees
+1	sam	1980-12-30 00:00:00.000
+2	sara	1982-09-01 12:02:36.260
+3	john	1985-08-22 12:03:30.270
+4	pam	1979-11-29 12:59:30.670
+
+
+select name, dateofbirth , datename(weekday,dateofbirth) as Day ,  month(dateofbirth) as Month, datename(month, dateofbirth) as Monthname  , datename(year, dateofbirth) as Year 
+from tblemployees
+sam	1980-12-30 00:00:00.000	Tuesday	12	December	1980
+sara	1982-09-01 12:02:36.260	Wednesday	9	September	1982
+john	1985-08-22 12:03:30.270	Thursday	8	August	1985
+pam	1979-11-29 12:59:30.670	Thursday	11	November	1979
+
+
+
+Select DATEPART(weekday, '2012-08-30 19:45:31.793') -- returns 5
+Select DATENAME(weekday, '2012-08-30 19:45:31.793') -- returns Thursday
+
+datepart return op in terms of integer
+datename return op in terms of string 
+
+
+Select DateAdd(DAY, 20, '2012-08-30 19:45:31.793') 
+-- Returns 2012-09-19 19:45:31.793
+Select DateAdd(DAY, -20, '2012-08-30 19:45:31.793') 
+-- Returns 2012-08-10 19:45:31.793
+
+Select DATEDIFF(MONTH, '11/30/2005','01/31/2006') -- returns 2
+Select DATEDIFF(DAY, '11/30/2005','01/31/2006') -- returns 62
+
+
+
+Write a query which returns the total number of registrations by day
+1	sam	1980-12-30 00:00:00.000
+2	sara	1982-09-01 12:02:36.260
+3	john	1980-12-30 00:00:00.000
+4	pam	1982-09-01 12:02:36.260
+5	raj	1982-09-01 12:02:36.260
+6	ram	1982-09-01 12:02:36.260
+7	Raghav	1982-09-01 12:02:36.260
+
+
+
+
+Select CAST(RegisteredDate as DATE) as RegistrationDate,
+COUNT(Id) as TotalRegistrations
+From tblRegistrations
+Group By CAST(RegisteredDate as DATE)
+
+1980-12-30	2
+1982-09-01	5
+
+
+print random no between 1 to 100
+
+declare @count int
+set @count=1
+while(@count<=10)
+begin
+	print floor(rand() *100)
+	set @count = @count+1
+end
+
+================
+inline table valued function 
+
+create function fngetemployeebygender(@gender nvarchar(10))
+returns table
+as
+	return (select name, gender, departmentid 
+	from tblemployee
+	where gender=@gender)
+
+select * from dbo.fngetemployeebygender('female') 
+
+select name , gender, departmentname from dbo.fngetemployeebygender('female')  e join tblDepartment d on e.departmentid = d.id
+
+
+create function fnILTVF()
+returns table
+as
+return (select id, name, cast(dateofbirth as date) as DOB from tblemployees)
+
+select * from tblemployees
+select * from fnILTVF()
+
+============
+multistatement table valued function
+
+create function fbmltvf()
+returns @table table (id int, name nvarchar(50), dob date)
+as begin 
+	insert into @table 
+	select id, name , cast(dateofbirth as date) as DOB from tblemployees
+	return 
+end
+
+select * from fbmltvf()
+
+
+Now let's understand the differences between Inline Table Valued functions and Multi-statement Table Valued functions
+
+1. In an Inline Table Valued function, the RETURNS clause cannot contain the structure of the table, the function returns. Where as, with the multi-statement table valued function, we specify the structure of the table that gets returned
+
+2. Inline Table Valued function cannot have BEGIN and END block, where as the multi-statement function can have.
+3. Inline Table valued functions are better for performance, than multi-statement table valued functions. If the given task, can be achieved using an inline table valued function, always prefer to use them, over multi-statement table valued functions.
+4. It's possible to update the underlying table, using an inline table valued function, but not possible using multi-statement table valued function.
+
+============
+schema binding  : with this option enabled we cant drop table which is getting used by the function
+
+create function fn_GetNameById(@id int)
+Returns nvarchar(50)
+with schemabinding
+as
+begin
+	return (select name from dbo.tblEmployee where id=@id)
+end
+select dbo.fn_GetNameById(2)
+
+drop table tblEmployee
+
+==========
+
+Difference Between Local and Global Temporary Tables:
+1. Local Temp tables are prefixed with single pound (#) symbol, where as gloabl temp tables are prefixed with 2 pound (##) symbols.
+
+2. SQL Server appends some random numbers at the end of the local temp table name, where this is not done for global temp table names.
+
+3. Local temporary tables are only visible to that session of the SQL Server which has created it, where as Global temporary tables are visible to all the SQL server sessions
+
+4. Local temporary tables are automatically dropped, when the session that created the temporary tables is closed, where as Global temporary tables are destroyed when the last connection that is referencing the global temp table is closed.
+
+==============
+
+table student: fields are id, first_name, last_name age, eamil,created_date
+
+create table emp (id int, fname varchar(10), lname varchar(10), age int, email varchar(10), created_date date)
+
+insert into emp values (1,'vijay','bhalekar', 10,'v@gmail.com',01/01/2020)
+
+
+1) write a query to get 2nd last student frm the table
+2) write a query to get duplicate last_names
+
+
+select * from student where id = (select max(id)-1 from student)
+
+
+SELECT  last_name,  COUNT(*)
+FROM student
+GROUP BY last_name
+HAVING COUNT (last_name) > 1
+=============
+https://www.programiz.com/sql/online-compiler/ // practise sql online 
+
+create table books(id int, name varchar(10), author_name varchar(10));
+
+create table subscriber(id int, book_id int, sub varchar(10));
+
+insert into books values(1,'book1','vijay'),(2,'book2','ajay'),(3,'book3','raj'),(4,'book4','ram'),(5,'book5','swati');
+
+insert into subscriber values(1,1,'sub1'),(2,1,'sub2'),(3,2,'sub3'),(4,4,'sub4');
+
+select * from books;
+select * from subscriber;
+
+1	book1	vijay
+2	book2	ajay
+3	book3	raj
+4	book4	ram
+5	book5	swati
+
+1	1	sub1
+2	1	sub2
+3	2	sub3
+4	4	sub4
+
+without using joins print common rows 
+
+
+select author_name , subscriber_name from books , subscriber where books.id = subscriber.book_id
+
+vijay	sub1
+vijay	sub2
+ajay	sub3
+ram	sub4
+
+
+============
+create table t1(id int);
+insert into t1 values(1),(2),(3),(4),(1),(2);
+select * from t1;
+
+id
+1
+2
+3
+4
+1
+2
+
+check whether this table contain duplicate items or not ?
+
+select count(*), count(distinct id) from emp
+====================
+print third highest saalary from table 
+
+select max(salary) from emp
+where salary < ( select max(salary) from emp where salary < (select max(salary) from emp));
+ 
+=========
+create table emp(id int, name varchar(10), salary int , dep varchar(10));
+insert into emp values(1,'v',1000,'hr'),
+(2,'a',2000,'hr'),
+(3,'b',3000,'sale'),
+(4,'c',4000,'sale'),
+(5,'d',5000,'Clean'),
+(6,'e',6000,'Clean');
+find second highest salary from table 
+
+select id, name, salary from
+(select id,name,salary, row_number() over (order by salary desc) as rank from sql1) where rank=2
+
+========
+https://www.youtube.com/watch?v=UQID9PgRhvk&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=2
+find second highest  salary from each department 
+
+select id, name , dept , salary from
+(select id, name, dept , salary , row_number() over ( partition by dept order by salary desc)  as rank from sql1 )temp where rank=2;
+
+=============
+
+row_number () : this is a window function is used to give sequence of number to all rows in table 
+select id , name , game , row_number() over (order by game) as rank from sql1
+
+id	name	game	rank
+1	sachin	cricket	1
+2	rohit	cricket	2
+5	ronaldo	football	3
+6	messi	football	4
+3	roger	tenis	5
+4	nadal	tennis	6
+  
+
+
+rank() :  rank is a window funciton that is used to give seuence no to all the rows of table but these numbers are loosely packed numbers
+select id , name , game , rank() over (order by game) as rank from sql1
+
+id	name	game	rank
+1	sachin	cricket	1
+2	rohit	cricket	1
+5	ronaldo	football	3
+6	messi	football	3
+3	roger	tenis	5
+4	nadal	tenis	5
+
+
+dense_rank()  :  rank is a window funciton that is used to give seuence no to all the rows of table but these numbers are tightly packed numbers
+
+select id , name , game , dense_rank() over(order by game) as rank from sql1
+
+id	name	game	rank
+1	sachin	cricket	1
+2	rohit	cricket	1
+5	ronaldo	football	2
+6	messi	football	2
+3	roger	tenis	3
+4	nadal	tenis	3
+
+
+===========
+https://www.youtube.com/watch?v=W4rMtrBxKkE&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=4
+
+
+LEAD() function :
+how to print the difference between next person;s salary and current person;s salary :
+
+create table sql1(id int, name varchar(10) ,salary int);
+insert into sql1 values(1,'a1',1000),
+(2,'a2',2000),
+(3,'a3',3000);
+select * from sql1;
+ 
+select id , name ,salary, (next_person_sal - salary)  as difference from
+(select id , name , salary , lead(salary, 1,0) over (order by salary) as next_person_sal from sql1) as temp
+
+
+id	name	salary	difference
+1	a1	1000	1000
+2	a2	2000	1000
+3	a3	3000	-3000
+
+
+=============
+LAG() Function :
+
+
+how to print the difference between previous persons salary and current persons salary :
+
+select id, name ,salary , (salary - prev_person_sal) as difference
+from (
+select id, name ,salary , lag(salary , 1, 0) over (order by salary)  as prev_person_sal from sql1) temp
+
+
+id	name	salary	difference
+1	a1	1000	1000
+2	a2	2000	1000
+3	a3	3000	1000
+
+select id, name ,salary , (salary - prev_person_sal) as difference
+from (
+select id, name ,salary , lag(salary , 1, 0) over (order by salary)  as prev_person_sal from sql1) temp
+
+
+==========
+https://www.youtube.com/watch?v=mDtm8rf_XI4&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=5
+
+pivot rows to column 
+
+create table std_tab (sid int, sub varchar(10), marks int);
+insert into std_tab values(1,'eng',88),
+(1,'sci',90),
+(1,'math',85),
+(2,'eng',80),
+(2,'sci',88),
+(2,'math',50);
+
+select * from std_tab;
+
+sid	sub	marks
+1	eng	88
+1	sci	90
+1	math	85
+2	eng	80
+2	sci	88
+2	math	50
+
+convert this table into  :
+
+sid	ENG	SCI	MATH
+1	88	90	85
+2	80	88	50
+
+ANS : 
+
+select sid, sum(case when sub='eng' then marks else 0 end) as ENG,
+sum(case when sub='sci' then marks else 0 end) as SCI,
+           sum(case when sub='math' then marks else 0 end) as MATH
+            from std_tab group by sid
+			
+			
+
+==============
+https://www.youtube.com/watch?v=7Yh8OM00hhk&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=6
+qstn : what is total salary of all employees having same name 
+
+create table ee(id int, name varchar(10), salary int);
+insert into ee values(1,'a',1000),
+(2,'b',2000),
+(3,'c',3000),
+(4,'d',4000),
+(1,'a',1000),
+(2,'b',2000),
+(3,'c',3000),
+(4,'d',4000),
+(1,'a',1000),
+(2,'b',2000),
+(3,'c',3000),
+(4,'d',4000);
+
+select * from ee;
+
+id	name	salary
+1	a	1000
+2	b	2000
+3	c	3000
+4	d	4000
+1	a	1000
+2	b	2000
+3	c	3000
+4	d	4000
+1	a	1000
+2	b	2000
+3	c	3000
+4	d	4000
+
+
+select id , name , salary , sum(salary) over (partition by name)  as  total_salary from sql1 ;
+
+id	name	salary	total_salary
+1	a	1000	3000
+1	a	1000	3000
+1	a	1000	3000
+2	b	2000	6000
+2	b	2000	6000
+2	b	2000	6000
+3	c	3000	9000
+3	c	3000	9000
+3	c	3000	9000
+4	d	4000	12000
+4	d	4000	12000
+4	d	4000	12000
+
+
+===================
+https://www.youtube.com/watch?v=CFyiO4_bWiw&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=10
+
+delete duplicate elements from table 
+
+create table dup(id int, name varchar(10) , email varchar(10));
+
+insert into dup values(1,'a','a@gmail.com'),(2,'a','a@gmail.com'),(3,'b','b@gmail.com'),(4,'c','c@gmail.com'),(5,'c','c@gmail.com');
+
+select * from dup;
+
+input table : 
+id	name	email
+1	a	a@gmail.com
+2	a	a@gmail.com
+3	b	b@gmail.com
+4	c	c@gmail.com
+5	c	c@gmail.com
+
+
+
+select id, name, email , row_number() over(partition by email order by email) as rank from dup
+
+id	name	email	rank
+1	a	 a@gmail.com	1
+2	a	 a@gmail.com	2
+3	b	 b@gmail.com	1
+4	c	 c@gmail.com	1
+5	c	 c@gmail.com	2
+
+
+
+select id from ( select id, name, email , row_number() over(partition by email order by email) as rank from dup ) temp where rank >1
+
+id
+2
+5
+
+delete from dup where id in (select id from ( select id, name, email , row_number() over(partition by email order by email) as rank from dup ) temp where rank >1) 
+
+=======================
+second method to delete duplicate rows from table 
+
+drop table dup;
+
+create table dup(id int, name varchar(10) , email varchar(10));
+
+insert into dup values(1,'a','a@gmail.com'),(2,'a','a@gmail.com'),(3,'b','b@gmail.com'),(4,'c','c@gmail.com'),(5,'c','c@gmail.com');
+
+select * from dup;
+
+input table : 
+id	name	email
+1	a	a@gmail.com
+2	a	a@gmail.com
+3	b	b@gmail.com
+4	c	c@gmail.com
+5	c	c@gmail.com
+
+
+delete from dup where id not in 
+(select min(id) from dup group by email)
+===============
+delete duplicate records from table when there is no unique column 
+
+drop table emp;
+
+create table emp(id int, name varchar(10), did int, salary int);
+
+insert into emp values(1,'v',1,10), (1,'v',1,10), (2,'a',2,10), (2,'a',2,10);
+
+select * from emp;
+
+id name did salary
+1	v	1	10
+1	v	1	10
+2	a	2	10
+2	a	2	10
+
+
+delete from emp where rowid not in 
+(
+select min(rowid)
+from emp 
+group by name 
+)
+
+==================
+https://www.youtube.com/watch?v=qk1AjwBXSqg&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=11
+
+create table sale(id int, amount float);
+insert into sale values(1,100.6),(2,90.2);
+select * from sale;
+
+
+id	amount
+1	100.6
+2	90.2
+
+select id, amount, round(amount,0) as rounded_amount from sale
+
+id	amount	rounded_amount
+1	100.6	101
+2	90.2	90
+=============
+https://www.youtube.com/watch?v=VooSuH1utmM&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=12
+
+in table how to swap attribute with one update query 
+
+drop table salary;
+create table salary (id int,name varchar(5), sex char(1), salary int);
+
+insert into salary values(1,'A','m',1000),(2,'B'
+                                           ,'f',200),(3,'C','m',3000),
+(4,'D','f',4000);
+
+select * from salary;
+
+id	name	sex	salary
+1	A	m	1000
+2	B	f	200
+3	C	m	3000
+4	D	f	4000
+
+
+update salary 
+set sex=
+case when sex='m' then 'f'
+else 'm' end;
+
+
+id	name	sex	salary
+1	A	f	1000
+2	B	m	200
+3	C	f	3000
+4	D	m	4000
+
+===============
+https://www.youtube.com/watch?v=VHZ3aIGTp6k&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=9
+
+how to do concat
+
+drop table t1;
+create table t1 (id varchar(5));
+
+insert into t1 values ('a'),('a'),('a'),('a'),('b'),('b'),('b'),('c'),('c'),('d');
+
+select * from t1;
+
+id
+a
+a
+a
+a
+b
+b
+b
+c
+c
+d
+
+
+select id , id || count(id) over(partition by id)  as total from t1
+
+id	total
+a	a4
+a	a4
+a	a4
+a	a4
+b	b3
+b	b3
+b	b3
+c	c2
+c	c2
+d	d1
+
+select id , id || count(id) from t1 group by id;
+
+id	id || count(id)
+a	a4
+b	b3
+c	c2
+d	d1
+
+====================
+https://www.youtube.com/watch?v=o_MLFHZ4aTA&list=PLtVEXYugyd5NslHxGyCDpyqH7Nn6ndjoy&index=13
+
+print name of customer who never order anything 
+
+drop table cus;
+drop table ord;
+create table cus(id int , name varchar(5));
+create table ord (id int , customerid int);
+
+
+insert into cus values (1, 'joe'),(2,'vijay'),(3,'ram'),(4,'raghav');
+insert into ord values (1,3),(2,1);
+
+select * from cus;
+select * from ord;
+
+cus : 
+id	name
+1	joe
+2	vijay
+3	ram
+4	raghav
+
+
+ord :
+id	customerid
+1	3
+2	1
+
+
+OP :
+vijay
+raghav 
+
+ANSWER QUERY : 
+
+select id, name from cus where id not in (
+select c.id from cus c inner join ord o 
+on c.id = o.customerid )
+
+select name from cus where id not in (select customerid from ord )
+
+===========
+sql parsing sequence : 
+FROM 
+JOIN 
+WHERE 
+GROUP BY 
+HAVING
+SELECT 
+DISTINCT 
+ORDER BY 
+LIMIT 
+
+
+==============
+try these questions on sql server 
+https://www.youtube.com/watch?v=9YqSoC7pt4M&list=PL6QJjoUw-9EFhqt-11sk49E-W3OlKIVkC&index=24
+write a query to split the username and email domain name 
+
+create table e ( email varchar(30));
+insert into e values('vijay_bhelakar@gmail.com'),('akay_rane@redifmail.com'),('ram@hotmail.cmo');
+select * from e;
+
+email
+vijay_bhelakar@gmail.com
+akay_rane@redifmail.com
+ram@hotmail.cmo
+
+
+
+select email , left(email , charindex('@',email)-1) as NAME , 
+right(email , len(email)-charindex('@',email)) as LAST
+from e;
+
+query : 
+email						username 		domain
+vijay_bhelakar@gmail.com	vijay_bhelakar	gmail.com
+akay_rane@redifmail.com		akay_rane		redifmail.com
+ram@hotmail.cmo				ram				hotmail.cmo
+=========================
+
+write a query to delete all duplicate items based on same name and dept ,delete latest entry 
+
+drop table team;
+create table team (id int, name varchar(10), department varchar(10), city varchar(10))
+insert into team values(1,	'ram',	'operation',	'mumbai'),
+(2,	'ram',	'operation',	'nashik'),
+(3,	'raghav',	'hr',	'pune'),
+(4,	'sitaram',	'it',	'delhi'),
+(5,	'sitaram',	'it',	'gurgaon'),
+(6,	'ramchandra',	'hr',	'vellore');
+
+
+1	ram	operation	mumbai
+2	ram	operation	nashik
+3	raghav	hr	pune
+4	sitaram	it	delhi
+5	sitaram	it	gurgaon
+6	ramchandra	hr	vellore
+
+
+
+QUERY : 
+
+delete from team where id in (
+select max(id)
+from team 
+group by name , department 
+having count(*) >1 )
+
+
+1	ram	operation	mumbai
+3	raghav	hr	pune
+4	sitaram	it	delhi
+6	ramchandra	hr	vellore
+
+==============
+find second highest salary from emp table where dep name is sale:
+
+create table emp(id int, name varchar(10) , salary int , did int);
+insert into emp values
+(1,'vijay',1000,1),
+(2,'ajay',2000,1),
+(3,'vij',3000,1),
+(4,'madhu',4000,2),
+(5,'swati',5000,2),
+(6,'ram',6000,2)
+
+create table dep(id int, name varchar(10));
+
+insert into dep values
+(1,'hr'),
+(2,'sale'),
+(3,'science');
+
+select * from (
+select id, name ,salary , did , rank from (
+select id , name, salary , did, row_number() over (partition by did  order by salary desc) as rank from emp) where rank =2 ) temp  inner join dep  where temp.did = dep.id and dep.name = 'sale'
+
+select id , name, salary , did from (
+select id , name , salary , did , row_number() over (partition by did order by salary desc) as rank 
+from emp)as temp where rank =2 and did in (select id from dep where name='sale');
+
+
+
+=============
+Given a table Employees with columns EmployeeID, FirstName, and LastName, reportsto.
+write a SQL query to list all employees who have the same last name as their manager. The Employees table also contains a column ReportsTo, which indicates the EmployeeID of the employee's manager.
+
+
+insert into emp values
+(1,'vijay','aa', null),
+(2,'ajay','bb', 1),
+(3,'ram','cc',1),
+(4,'shree','cc',3),
+(5,'swati','bb',2),
+(6,'mad','dd',4);
+
+select e1.id, e1.name , e1.lname , e2.name as Manager_name
+from emp e1 , emp e2
+where e1.reportsto = e2.id and 
+e1.lname = e2.lname 
+
+id	name	lname	Manager_name
+4	shree	cc	ram
+5	swati	bb	ajay
+
+===========
+
+print total no of employees having same email domain name :
+
+insert into emp values(1,'vij','bha','vijay@gmail.com'),
+(2,'aj','rane','ajay@gmail.com'),
+(3,'swati','dhure','swati@rediff.com'),
+(4,'vij','bhalk','vy@hot.com'),
+(5,'vij','bha','ay@hot.com'),
+(6,'vij','bha','vijay@rediff.com');
+
+select * from emp;
+
+1	vij	bha	vijay@gmail.com
+2	aj	rane	ajay@gmail.com
+3	swati	dhure	swati@rediff.com
+4	vij	bhalk	vy@hot.com
+5	vij	bha	ay@hot.com
+6	vij	bha	vijay@rediff.com
+
+
+select substring(email, charindex('@', email)+1 , len(email)-charindex('@' , email)) as domain , count(*) from emp
+group by substring(email, charindex('@', email)+1 , len(email)-charindex('@' , email)) ;
+
+gmail.com	2
+hot.com	2
+rediff.com	2
+
+===============
+Hide email id  of user just diplay only starting 2 characters and domain name ;
+
+create table ee (id int, fname varchar(10) , lname varchar(10) , email varchar(30));
+insert into ee values(1,'vij','bha','vijay@gmail.com'),
+(2,'ajay','bha','ajay@gmail.com'),
+(3,'swati','dhure','swati@rediff.com'),
+(4,'vv','bb','vy@hot.com'),
+(5, 'aa','bb','ay@hot.com'),
+(6,'ff','cc','vijay@rediff.com');
+
+select * from ee;
+
+
+1	vij	bha	vijay@gmail.com
+1	aj	rane	ajay@gmail.com
+1	swati	dhure	swati@rediff.com
+1	vij	bhalk	vy@hot.com
+1	vij	bha	ay@hot.com
+1	vij	bha	vijay@rediff.com
+
+select id  , fname , lname , email, substring(email,1,2)
+ + replicate('*',5) + '@' +
+ right(email, len(email)-charindex('@', email)) as updated_email
+from ee;
+
+vij	bha	vi*****@gmail.com
+aj	rane	aj*****@gmail.com
+swati	dhure	sw*****@rediff.com
+vij	bhalk	vy*****@hot.com
+vij	bha	ay*****@hot.com
+vij	bha	vi*****@rediff.com
+
+======================
+
+put 5 spaces in between fname and lname 
+
+select fname + space(5) + lname  as fullname from emp;
+ 
+============
+patindex :
+this is similiar to charindex just difference is that in patindex we can use wildcard in search pattern but in charindex we cant use wildcard
+
+select email , patindex('%@gmail.com' , email)	as firstoccur 
+from emp
+where patindex('%gmail.com' , email) > 0
+
+
+vijay@gmail.com	6
+ajay@gmail.com	5
+=================
+stuff :
+this function inserts replacement expression at the start position specified , along with removing the characters specified using the length parameter 
+
+select fname , lname , email , stuff(email  , 2 , 3, '*****')  as stuffed_email 
+from emp
+
+
+vij	bha	vijay@gmail.com	v*****y@gmail.com
+aj	rane	ajay@gmail.com	a*****@gmail.com
+swati	dhure	swati@rediff.com	s*****i@rediff.com
+vij	bhalk	vy@hot.com	v*****ot.com
+vij	bha	ay@hot.com	a*****ot.com
+vij	bha	vijay@rediff.com	v*****y@rediff.com
+
+==========
+Datename :
+
+Select DATENAME(Day, '2012-09-30 12:43:46.837') -- Returns 30
+Select DATENAME(WEEKDAY, '2012-09-30 12:43:46.837') -- Returns Sunday
+Select DATENAME(MONTH, '2012-09-30 12:43:46.837') -- Returns September
+
+
+Select DATEPART(weekday, '2012-08-30 19:45:31.793') -- returns 5
+Select DATENAME(weekday, '2012-08-30 19:45:31.793') -- returns Thursday
+
+
+Select DateAdd(DAY, 20, '2012-08-30 19:45:31.793') 
+-- Returns 2012-09-19 19:45:31.793
+Select DateAdd(DAY, -20, '2012-08-30 19:45:31.793') 
+-- Returns 2012-08-10 19:45:31.793
+
+
+
+Select DATEDIFF(MONTH, '11/30/2005','01/31/2006') -- returns 2
+Select DATEDIFF(DAY, '11/30/2005','01/31/2006') -- returns 62
+
+=========
+
+find total no of registrations  done on every day irrespective of time :
+select * from reg;
+
+1	vijay	2022-01-01 11:11:11.123
+2	ajay	2022-01-01 02:02:02.223
+3	mad		2022-02-01 01:01:01.123
+4	swati	2022-02-01 01:01:01.123
+5	ram	2000-01-01 01:01:01.123
+
+
+select cast(reg_date as date) , count(id) as [Total registration ]
+from reg
+group by cast(reg_date as date)
+
+2000-01-01	1
+2022-01-01	2
+2022-02-01	2
+
+=============
+create table emp(id int, name varchar(10), salary int , did int);
+insert into emp values (1,'vijay',1000,1),
+(2,'ajay',2000,3),
+(3,'vay',3000,2),
+(4,'jay',4000,1),
+(5,'vjy',5000,2),
+(6,'jaya',6000,2),
+(7,'ram',7000,3),
+(8,'rama',8000,null),
+(9,'raghav',9000,null);
+select * from emp;
+
+
+id	name	salary	did
+1	vijay	1000	1
+2	ajay	2000	3
+3	vay	3000	2
+4	jay	4000	1
+5	vjy	5000	2
+6	jaya	6000	2
+7	ram	7000	3
+8	rama	8000	null
+9	raghav	9000	null
+
+
+
+create table dep(id int , name varchar(10) , location varchar(10));
+insert into dep values(1,'HR','mumbai'),
+(2,'sale','pune'),
+(3,'cleaning','chennai'),
+(4,'CEO','Noida');
+select * from dep;
+
+
+id	name	location
+1	HR	mumbai
+2	sale	pune
+3	cleaning	chennai
+4	CEO	Noida
+
+using left inner join print all records from emp who doesnt have any department :
+
+1 ) select e.id , e.name , e.salary , d.id , d.name 
+from emp e left join dep d
+on e.did = d.id 
+where d.id is null;
+
+id	name	salary	id	name
+8	rama	8000	null null	
+9	raghav	9000	null null
+============
+right join excluding common rows only records from right table 
+
+select e.id , e.name , e.salary , d.id , d.name 
+from emp e right join dep d
+on e.did = d.id 
+where e.did is null;
+
+id	name	salary	id	name
+NULL	NULL	NULL	4	CEO
+
+==========
+full join excluding common rows
+
+select e.id , e.name , e.salary , d.id , d.name 
+from emp e full join dep d 
+on e.did = d.id 
+where e.did is null or d.id is null;
+
+id	name	salary	id	name
+8	rama	8000	NULL	NULL
+9	raghav	9000	NULL	NULL
+NULL	NULL	NULL	4	CEO
+
+=============
+print name , marks and grade , if marks > 86 then print 'A+' , if more than 76 then 'A' , if more than 66 then 'C' 
+
+create table std(id int, name varchar(20), marks int);
+insert into std values(1, 'vijay', 99),
+(2,'ajay',85),(3,'mad',75),(4,'swati',79),(5,'ruday',64);
+select * from std;
+
+1	vijay	99
+2	ajay	85
+3	mad	75
+4	swati	79
+5	ruday	64
+
+
+select name ,marks , 
+case
+	when marks > 86 then 'A+'
+	when marks > 76 then 'A'
+	when marks > 66 then 'B'
+	when marks > 56 then 'C'
+end
+as Grade 
+from std
+
+
+name marks grade 
+vijay	99	A+
+ajay	85	A
+mad	    75	B
+swati	79	A
+ruday	64	C
+
+===========
+print class and sum of scores from each class having flag as yes 
+
+
+create table student(id int, flag varchar(5) , score int, class  int);
+insert into student values (1,'no',50,1),(2,'yes',60,1),(1,'yes',20,2),(2,'yes',30,2),(3,'no',40,2),(4,'yes',50,2);
+select * from student;
+
+id  flag score class
+1	no	50	1
+2	yes	60	1
+1	yes	20	2
+2	yes	30	2
+3	no	40	2
+4	yes	50	2
+
+
+select class , sum(score) as SUM  from student  group by class , flag 
+having flag = 'yes';
+
+
+class SUM
+1	60
+2	100
+
+============
+SQL Query to Display First 50% Records from Employee Table?
+
+
+select top 50 percent * from Employee;
